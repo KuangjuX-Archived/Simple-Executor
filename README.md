@@ -1,5 +1,5 @@
 # Simple Executor
-A Simple Executor to learn async programe in Rust.
+A Simple Executor to learn async program in Rust.
 
 ## References
 - [async-book](https://rust-lang.github.io/async-book/)
