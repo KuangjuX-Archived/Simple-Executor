@@ -1,7 +1,6 @@
-use std::{future::Future, pin::Pin, sync::{Arc, Mutex, mpsc::SyncSender}, task::{Context, Poll, Waker}, thread};
-
+use std::{future::Future, pin::Pin, sync::{Arc, Mutex}, task::{Context, Poll, Waker}, thread};
 use futures::future::BoxFuture;
-use futures::task::ArcWake;
+
 
 pub struct TaskFuture {
     id: usize,
@@ -55,16 +54,5 @@ impl TaskFuture {
 
 pub struct Task {
     pub future: Mutex<Option<BoxFuture<'static, ()>>>,
-    pub task_sender: SyncSender<Arc<Task>>,
 }
 
-impl ArcWake for Task {
-    /// 将任务送回至 sender 中等待下次被 poll
-    fn wake_by_ref(arc_self: &Arc<Self>) {
-        let cloned = arc_self.clone();
-        arc_self
-            .task_sender
-            .send(cloned)
-            .expect("too many tasks queued");
-    }
-}
